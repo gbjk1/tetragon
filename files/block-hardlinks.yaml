@@ -1,0 +1,16 @@
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: "block-hardlinks"
+spec:
+  kprobes:
+  - call: "sys_linkat"
+    syscall: true
+    selectors:
+    - matchArgs:
+      - index: 1
+        operator: "Equal"
+        values:
+        - "/etc/passwd"
+      matchActions:
+      - action: Sigkill
